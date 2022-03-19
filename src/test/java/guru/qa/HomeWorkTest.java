@@ -32,10 +32,9 @@ public class HomeWorkTest {
             ZipEntry zipEntry;
             while ((zipEntry = zis.getNextEntry()) != null) {
 
-                if (zipEntry.getName().contains("csv")) {
-                    try (InputStream is1 = classLoader.getResourceAsStream(
-                            "files/business-financial-data-sep-2021-quarter.csv");
-                         CSVReader reader = new CSVReader(new InputStreamReader(is1))) {
+                if (InputStream is1 = classLoader.getResourceAsStream(
+                        "files/business-financial-data-sep-2021-quarter.csv");
+                CSVReader reader = new CSVReader(new InputStreamReader(is1))) {
                         List<String[]> contents = reader.readAll();
                         assertThat(contents.get(0)).contains("Month", "1958", "1959", "1960");
                     }
