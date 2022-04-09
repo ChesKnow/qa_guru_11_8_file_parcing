@@ -26,7 +26,7 @@ public class HomeWorkTest {
     @Test
     public void ZipFewFilesParseTest() throws Exception {
 
-        ZipFile zipFile = new ZipFile("files/test.zip");
+        ZipFile zipFile = new ZipFile("src/test/resources/files/test.zip");
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
 
         while(entries.hasMoreElements()){

@@ -2,24 +2,32 @@ package guru.qa;
 
 import com.codeborne.pdftest.PDF;
 import com.codeborne.xlstest.XLS;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.opencsv.CSVReader;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
-import static java.nio.charset.StandardCharsets.*;
+import static com.fasterxml.jackson.core.JsonToken.VALUE_STRING;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FilesParsingTest {
 
@@ -90,6 +98,19 @@ public class FilesParsingTest {
             JsonObject jsonobject = gson.fromJson(json, JsonObject.class);
             assertThat(jsonobject.get("name").getAsString()).isEqualTo("Dmitrii");
             assertThat(jsonobject.get("address").getAsJsonObject().get("street").getAsString()).isEqualTo("Mira");
+
+        }
+    }
+
+    @Test
+    void jacksonLibraryJsonParsingTest() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        try (InputStream is1 = classLoader.getResourceAsStream("files/simple.json")) {
+            String json1 = new String(is1.readAllBytes(), UTF_8);
+            JsonNode jsonNode = mapper.readTree(json1);
+
+            assertThat(jsonNode.get("name").asText()).isEqualTo("Dmitrii");
 
         }
     }
