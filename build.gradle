@@ -9,9 +9,7 @@ repositories {
     mavenCentral()
 }
 
-compileTestJava {
-    options.encoding = 'UTF-8'
-}
+
 
 dependencies {
     testImplementation (

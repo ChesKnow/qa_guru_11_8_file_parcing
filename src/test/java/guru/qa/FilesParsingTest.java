@@ -74,7 +74,7 @@ public class FilesParsingTest {
     void parseZipTest() throws Exception {
 
         try (InputStream is = classLoader.getResourceAsStream(
-                "files/business-financial-data-september-2021-quarter.zip");
+                "files/test.zip");
              ZipInputStream zis = new ZipInputStream(is)) {
             ZipEntry zipEntry;
             while ((zipEntry = zis.getNextEntry()) != null) {
