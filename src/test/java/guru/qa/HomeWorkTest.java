@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static com.codeborne.selenide.Selenide.$;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Парсим файлы разных расширений")
@@ -26,14 +24,16 @@ public class HomeWorkTest {
     @Test
     public void ZipFewFilesParseTest() throws Exception {
 
-        ZipFile zipFile = new ZipFile("src/test/resources/files/test.zip");
+        //ZipFile zipFile = new ZipFile(new File (classLoader.getResource("files/test1.zip").toURI()));
+        ZipFile zipFile = new ZipFile("src/test/resources/files/files.zip");
+
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
 
         while(entries.hasMoreElements()){
             ZipEntry entry = entries.nextElement();
             if(entry.getName().contains(".csv")){
-                try (InputStream is = classLoader.getResourceAsStream(entry.getName());
-                     CSVReader reader = new CSVReader(new InputStreamReader(is))) {
+                try (InputStream file = zipFile.getInputStream(entry);
+                     CSVReader reader = new CSVReader(new InputStreamReader(file))) {
                     List<String[]> contents = reader.readAll();
                     assertThat(contents.get(0)).contains("Series_reference",
                             "Period",
@@ -52,8 +52,9 @@ public class HomeWorkTest {
 
                 }
             } else if (entry.getName().contains(".pdf")) {
-                File pdf_download = new File(entry.getName());
-                PDF pdf = new PDF(pdf_download);
+                try (InputStream file1 = zipFile.getInputStream(entry);
+
+                PDF pdf = new PDF(new InputStream(file1));
                 assertThat(pdf.author).isNull();
             } else {
                 File xls_download = new File(entry.getName());
