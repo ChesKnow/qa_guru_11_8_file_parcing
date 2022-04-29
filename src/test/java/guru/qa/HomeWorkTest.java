@@ -52,10 +52,10 @@ public class HomeWorkTest {
 
                 }
             } else if (entry.getName().contains(".pdf")) {
-                try (InputStream file1 = zipFile.getInputStream(entry);
+                try (InputStream file1 = classLoader.getResourceAsStream(entry.getName());
 
-                PDF pdf = new PDF(new InputStream(file1));
-                assertThat(pdf.author).isNull();
+                PDF pdf = new PDF(file1)){
+                assertThat(pdf.author).isNull();}
             } else {
                 File xls_download = new File(entry.getName());
                 XLS xls = new XLS(xls_download);
