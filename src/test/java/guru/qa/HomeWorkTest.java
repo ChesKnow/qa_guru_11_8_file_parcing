@@ -6,7 +6,6 @@ import com.opencsv.CSVReader;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
@@ -49,20 +48,17 @@ public class HomeWorkTest {
                             "Series_title_3",
                             "Series_title_4",
                             "Series_title_5");
-
                 }
             } else if (entry.getName().contains(".pdf")) {
-                try (InputStream file1 = zipFile.getInputStream(entry);
-
-                PDF pdf = new PDF(file1)){
-                assertThat(pdf.author).isNull();}
+                InputStream file1 = zipFile.getInputStream(entry);
+                PDF pdf = new PDF(file1);
+                assertThat(pdf.author).isNull();
             } else {
-                File xls_download = new File(entry.getName());
-                XLS xls = new XLS(xls_download);
+                XLS xls = new XLS(zipFile.getInputStream(entry));
                 assertThat(xls.excel
                         .getSheetAt(0)
                         .getRow(2).
-                        getCell(1).getStringCellValue()).contains("ФИО");
+                        getCell(1).getStringCellValue()).contains("Воронцова");
             }
         }
     }
